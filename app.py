@@ -4,6 +4,8 @@ import json
 from credentials import firebase,gcp_access_token
 import datetime
 app = Flask(__name__)
+
+#Patient Methods
 def create_patient(_id,first_name,last_name,phone,e_name,e_num):
     patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
     patient_body = {
@@ -16,7 +18,43 @@ def create_patient(_id,first_name,last_name,phone,e_name,e_num):
     }
     r = requests.post(patient_endpoint,data=json.dumps(patient_body))
     return r.json()
-    
+
+def get_todays_patients():
+    result = []
+    for patient in patients:
+        visits = patient['visits']
+        for visit in visits:
+            try:
+                checkIn = visit['checkInTime'].split()[0]
+                now = datetime.datetime.now().strftime("%d/%m/%Y")
+                if checkIn == now and not patient['visitSummary']:
+                    result.append({patient:checkIn})
+            except:
+                return []
+    return result
+
+def get_patient_from_local(localId):
+    patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
+    all_patients = requests.get(patient_endpoint).json()
+    for patient in all_patients:
+        if all_patients[patient]['localId'] == localId:
+            return patient
+
+def find_earliest_visit(visits):
+    #return visit id of most recent time
+    recent_id = ""
+    earliest_time = None
+    for visit in visits:
+        time = visit['checkInTime']
+        if not earliest_time:
+            recent_id = visit 
+            earliest_time = time 
+        else:
+            if time > earliest_time:
+                recent_id = visit 
+                earliest_time = time
+    return recent_id
+#Routes
 @app.route('/register',methods=['POST'])
 def register_user():
     if request.method == 'POST':
@@ -64,7 +102,10 @@ def login():
         }
         r = requests.post(endpoint,data=login_body)
         if r.status_code == 200:
-            return Response("{'Message':'Successful Sign In'}", status=200, mimetype='application/json')
+            localId = r.json()['localId']
+            patient_id = get_patient_from_local(localId)
+            response = {"Message":"Successful Sign In","patientId":patient_id}
+            return Response(json.dumps(response), status=200, mimetype='application/json')
         return Response("{'Message':'Invalid Credentials'}", status=404, mimetype='application/json')
     return Response("{'Message':'Invalid Credentials'}", status=404, mimetype='application/json')
 
@@ -73,7 +114,7 @@ def create_visit(profile_id):
     #Query Param: profileID
     endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + profile_id +  "/visits.json?access_token=" + gcp_access_token 
     visit_body = {
-        "dateVisited":datetime.date.today().strftime("%d/%m/%Y")
+        "checkInTime":datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     }
 
     #Add visit
@@ -120,3 +161,36 @@ def visit_details(patient_id,visit_id):
     endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + patient_id +  "/visits/" + visit_id + ".json?access_token=" + gcp_access_token 
     r = requests.get(endpoint)
     return Response(json.dumps(r.json()),status=200,mimetype='application/json')
+
+@app.route('/queue-position/<patient_id>',methods=['GET'])
+def find_pos_in_que(patient_id):
+    #Queue = users with date visited == today, ordering = earliest to latest
+    todays_patients = get_todays_patients()
+    queue = sorted(todays_patients.items(), key=lambda x: x[1])
+    pos = 0
+    for patient in queue:
+        if queue[0] == patient_id:
+            return Response(json.dumps({"Position":pos}))
+        pos += 1
+    return Response(json.dumps({"Message":"Something went wrong"}))
+
+@app.route('/recent-visitor',methods=['GET'])
+def get_recent_visitor():
+    #Return the patient id, and visit id of the most recently checked in patient
+    todays_patients = get_todays_patients()
+    queue = sorted(todays_patients.items(), key=lambda x: x[1])
+    print(queue)
+    return Response(json.dumps({"Message":"Hello"}))
+    # recent_visitor = {}
+    # patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
+    # all_patients = requests.get(patient_endpoint).json()
+    # for patient in all_patients:
+    #     visits = all_patients[patient]['visits']
+    #     earliest_visit = find_earliest_visit(visits)
+    #     if not recent_visitor:
+    #         recent_visitor = {"patientId":patient,"visitId":earliest_visit}
+    #     else:
+    #         current_recent_visit = recent_visitor['visitId']
+    #         if get_time(earliest_visit) > get_time(current_recent_visit):
+    #             recent_visitor = {"patientId":patient,"visitId":earliest_visit}
+    # return Response(json.dumps(recent_visitor),status=200,mimetype='application/json')
