@@ -34,16 +34,16 @@ class PatientQueue extends Component {
     }
 
     componentDidMount = async () => {
-        // const endpoint = serverUrl + "/api/report/"
-        // console.log(endpoint)
-        // try {
-        //     const response = await fetch(endpoint);
-        //     const data = await response.json();
-        //     console.log(data)
-        //     this.setState({ patients: data.data })
-        // } catch (err) {
-        //     this.handleError(err)
-        // }
+        const endpoint = serverUrl + "/api/report/"
+        console.log(endpoint)
+        try {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            console.log(data)
+            this.setState({ patients: data.data })
+        } catch (err) {
+            this.handleError(err)
+        }
         setTimeout(() => {
             this.setState({ isLoading: false })
         }, 1000)

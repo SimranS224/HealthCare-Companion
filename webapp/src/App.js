@@ -28,8 +28,8 @@ class App extends Component {
             <div>
                 <Switch>
                     <Route exact path='/login' render={() => <LoginView isSignedIn={this.state.isSignedIn} setIsSignedIn={this.setIsSignedIn} />} />
-                    <Route exact path="/patient_queue" render={() => <PatientQueue />} />
-                    <Route exact path="/patient/:id" render={props => <PatientView patientName={props.match.params.id}/>} />
+                    <Route exact path="/patient_queue" render={() => <PatientQueue setIsSignedIn={this.setIsSignedIn}/>} />
+                    <Route exact path="/patient/:id" render={props => <PatientView patientName={props.match.params.id} setIsSignedIn={this.setIsSignedIn}/>} />
                     {/* <Route exact path='/insurance' render={() => <InsuranceView isSignedIn={this.state.isSignedIn} setIsSignedIn={this.setIsSignedIn} />} /> */}
                     {/* <Route exact path='/violation/:licensePlate/:violationID' render={props => <ViolationView isSignedIn={this.state.isSignedIn} setIsSignedIn={this.setIsSignedIn} params={props.match.params} />} /> */}
                     {/* <Route exact path='/report/:id' render={props => <ReportView isSignedIn={this.state.isSignedIn} setIsSignedIn={this.setIsSignedIn} id={props.match.params.id} />} /> */}
