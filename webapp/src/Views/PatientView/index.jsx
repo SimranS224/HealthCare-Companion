@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import Loading from '../../Components/Loading';
 import MenuBar from "../../Components/MenuBar";
-
+import Iframe from 'react-iframe'
 import { serverUrl } from "../../config";
 
 import "./patientqueue.css";
@@ -15,7 +15,7 @@ class PatientQueue extends Component {
             isSignedIn: props.isSignedIn,
             isLoading: true,
             patients: [
-                {   
+                {
                     id: 5,
                     name: "Test Name",
                     reason: "Im ill",
@@ -60,9 +60,8 @@ class PatientQueue extends Component {
     }
 
     render = () => {
-        if (this.state.redirectTo) {
-            return <Redirect to={`/patient/${this.state.redirectTo}`}/>;
-        }
+        let url = "https://healthcare-assitant-kxgfmk.firebaseapp.com/?id=" + this.props.patientName
+        console.log("url:", url)
         if (this.state.isLoading) {
             return <Loading />
         } else {
@@ -70,33 +69,13 @@ class PatientQueue extends Component {
                 <div className="fullscreen dashboardBG">
                     {this.state.isLoading ? <Loading /> : null}
                     <MenuBar setIsSignedIn={this.props.setIsSignedIn} title={"Patients Waiting to be Seen"} />
-                    <div className="reportsWrapper">
-                        <Table responsive id="table">
-                            <thead className="headerRow">
-                                <tr>
-                                    <th className="tableheader">#</th>
-                                    <th className="tableheader">Patient</th>
-                                    <th className="tableheader">Urgency</th>
-                                    <th className="tableheader">Waiting Since</th>
-                                    <th className="tableheader">Reason for Visit</th>
-                                </tr>
-                            </thead>
-                            <tbody className="tableBody">
-                                {this.state.patients.map((p, i) => {
-                                    return (
-                                        <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p)}>
-                                            <td className="tabletext">{i + 1}</td>
-                                            <td className="tabletext">{p.name}</td>
-                                            <td className="tabletext">{p.urgency}</td>
-                                            <td className="tabletext">{p.time}</td>
-                                            <td className="tabletext">{p.reason}</td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </Table>
-
-                    </div>
+                    <Iframe url={url}
+                        width="100%"
+                        height="80%"
+                        id="myId"
+                        className="myClassname"
+                        display="initial"
+                        position="relative" />
                 </div>
             );
         }

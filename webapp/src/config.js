@@ -1,2 +1,2 @@
-const serverUrl = "http://836b000a.ngrok.io"
+const serverUrl = "https://medexpress-265520.appspot.com"
 export { serverUrl }
