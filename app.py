@@ -2,8 +2,12 @@ from flask import Flask,Blueprint, flash, g, redirect, render_template, request,
 import requests
 import json
 from credentials import firebase,gcp_access_token
+from flask_cors import CORS
 import datetime
 app = Flask(__name__)
+
+CORS(app)
+
 
 #Patient Methods
 def create_patient(_id,first_name,last_name,phone,e_name,e_num):
