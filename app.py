@@ -40,7 +40,20 @@ def get_patient_from_local(localId):
         if all_patients[patient]['localId'] == localId:
             return patient
 
-
+def find_earliest_visit(visits):
+    #return visit id of most recent time
+    recent_id = ""
+    earliest_time = None
+    for visit in visits:
+        time = visit['checkInTime']
+        if not earliest_time:
+            recent_id = visit 
+            earliest_time = time 
+        else:
+            if time > earliest_time:
+                recent_id = visit 
+                earliest_time = time
+    return recent_id
 #Routes
 @app.route('/register',methods=['POST'])
 def register_user():
@@ -160,3 +173,24 @@ def find_pos_in_que(patient_id):
             return Response(json.dumps({"Position":pos}))
         pos += 1
     return Response(json.dumps({"Message":"Something went wrong"}))
+
+@app.route('/recent-visitor',methods=['GET'])
+def get_recent_visitor():
+    #Return the patient id, and visit id of the most recently checked in patient
+    todays_patients = get_todays_patients()
+    queue = sorted(todays_patients.items(), key=lambda x: x[1])
+    print(queue)
+    return Response(json.dumps({"Message":"Hello"}))
+    # recent_visitor = {}
+    # patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
+    # all_patients = requests.get(patient_endpoint).json()
+    # for patient in all_patients:
+    #     visits = all_patients[patient]['visits']
+    #     earliest_visit = find_earliest_visit(visits)
+    #     if not recent_visitor:
+    #         recent_visitor = {"patientId":patient,"visitId":earliest_visit}
+    #     else:
+    #         current_recent_visit = recent_visitor['visitId']
+    #         if get_time(earliest_visit) > get_time(current_recent_visit):
+    #             recent_visitor = {"patientId":patient,"visitId":earliest_visit}
+    # return Response(json.dumps(recent_visitor),status=200,mimetype='application/json')
