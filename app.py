@@ -16,7 +16,21 @@ def create_patient(_id,first_name,last_name,phone,e_name,e_num):
     }
     r = requests.post(patient_endpoint,data=json.dumps(patient_body))
     return r.json()
-    
+
+def get_todays_patients():
+    result = []
+    for patient in patients:
+        visits = patient['visits']
+        for visit in visits:
+            try:
+                checkIn = visit['checkInTime'].split()[0]
+                now = datetime.datetime.now().strftime("%d/%m/%Y")
+                if checkIn == now and not patient['visitSummary']:
+                    result.append({patient:checkIn})
+            except:
+                return []
+    return result
+
 @app.route('/register',methods=['POST'])
 def register_user():
     if request.method == 'POST':
@@ -73,7 +87,7 @@ def create_visit(profile_id):
     #Query Param: profileID
     endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + profile_id +  "/visits.json?access_token=" + gcp_access_token 
     visit_body = {
-        "dateVisited":datetime.date.today().strftime("%d/%m/%Y")
+        "checkInTime":datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     }
 
     #Add visit
@@ -120,3 +134,15 @@ def visit_details(patient_id,visit_id):
     endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + patient_id +  "/visits/" + visit_id + ".json?access_token=" + gcp_access_token 
     r = requests.get(endpoint)
     return Response(json.dumps(r.json()),status=200,mimetype='application/json')
+
+@app.route('/queue-position/<patient_id>',methods=['GET'])
+def find_pos_in_que(patient_id):
+    #Queue = users with date visited == today, ordering = earliest to latest
+    todays_patients = get_todays_patients()
+    queue = sorted(todays_patients.items(), key=lambda x: x[1])
+    pos = 0
+    for patient in queue:
+        if queue[0] == patient_id:
+            return Response(json.dumps({"Position":pos}))
+        pos += 1
+    return Response(json.dumps({"Message":"Something went wrong"}))
