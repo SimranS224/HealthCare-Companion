@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#credentials
+credentials.py
+uoft-hacks-2f135-firebase-adminsdk-agchp-ebc7e2b847.json
