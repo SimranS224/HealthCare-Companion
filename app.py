@@ -15,8 +15,7 @@ def create_patient(_id,first_name,last_name,phone,e_name,e_num):
         "emergency_contact_number":e_num
     }
     r = requests.post(patient_endpoint,data=json.dumps(patient_body))
-    print(r.json())
-    return True
+    return r.json()
     
 @app.route('/register',methods=['POST'])
 def register_user():
@@ -44,7 +43,7 @@ def register_user():
             localId = r.json()['localId']
             patient = create_patient(localId,first_name,last_name,phone_num,emergency_contact_name,emergency_contact_number)
             if patient:
-                return "Successfully registered user"
+                return Response(json.dumps({"Message":"Successfully Created User","patientId":patient['name']}), status=200, mimetype='application/json')
             else:
                 print(patient)
     return "Something went wrong"
@@ -115,3 +114,9 @@ def patient_details(patient_id):
     if r.status_code == 200:
         print(r.json())
         return Response(json.dumps(r.json()),status=200,mimetype='application/json')
+
+@app.route('/visit-details/<patient_id>/<visit_id>',methods=['GET'])
+def visit_details(patient_id,visit_id):
+    endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + patient_id +  "/visits/" + visit_id + ".json?access_token=" + gcp_access_token 
+    r = requests.get(endpoint)
+    return Response(json.dumps(r.json()),status=200,mimetype='application/json')
