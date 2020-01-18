@@ -4,6 +4,8 @@ import json
 from credentials import firebase,gcp_access_token
 import datetime
 app = Flask(__name__)
+
+#Patient Methods
 def create_patient(_id,first_name,last_name,phone,e_name,e_num):
     patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
     patient_body = {
@@ -31,6 +33,15 @@ def get_todays_patients():
                 return []
     return result
 
+def get_patient_from_local(localId):
+    patient_endpoint ="https://uoft-hacks-2f135.firebaseio.com/patients.json?access_token=" + gcp_access_token 
+    all_patients = requests.get(patient_endpoint).json()
+    for patient in all_patients:
+        if all_patients[patient]['localId'] == localId:
+            return patient
+
+
+#Routes
 @app.route('/register',methods=['POST'])
 def register_user():
     if request.method == 'POST':
@@ -78,7 +89,10 @@ def login():
         }
         r = requests.post(endpoint,data=login_body)
         if r.status_code == 200:
-            return Response("{'Message':'Successful Sign In'}", status=200, mimetype='application/json')
+            localId = r.json()['localId']
+            patient_id = get_patient_from_local(localId)
+            response = {"Message":"Successful Sign In","patientId":patient_id}
+            return Response(json.dumps(response), status=200, mimetype='application/json')
         return Response("{'Message':'Invalid Credentials'}", status=404, mimetype='application/json')
     return Response("{'Message':'Invalid Credentials'}", status=404, mimetype='application/json')
 
