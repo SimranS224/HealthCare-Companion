@@ -25,10 +25,6 @@ import json
 # r = requests.post(endpoint,data={})
 # print(r.content)
 
-endpoint = "http://localhost:5000/add-response/-LyrMD1NZpOBifyANjIm/-LyrSuYnp92o3_GhIO-H"
-body = {
-    "prompt_num":2,
-    "message":"I feel bad"
-}
-r = requests.post(endpoint,data=body)
+endpoint = "http://localhost:5000/patient/-LyrMD1NZpOBifyANjIm"
+r = requests.get(endpoint)
 print(r.content)

@@ -108,15 +108,10 @@ def add_response(profile_id,visit_id):
     return Response("{'Message':'Invalid Credentials'}", status=404, mimetype='application/json')
 
 
-
-    
-
-
-
-
-
-
-
-
-
-
+@app.route('/patient/<patient_id>',methods=['GET'])
+def patient_details(patient_id):
+    endpoint = "https://uoft-hacks-2f135.firebaseio.com/patients/" + patient_id + ".json?access_token=" + gcp_access_token 
+    r = requests.get(endpoint)
+    if r.status_code == 200:
+        print(r.json())
+        return Response(json.dumps(r.json()),status=200,mimetype='application/json')
