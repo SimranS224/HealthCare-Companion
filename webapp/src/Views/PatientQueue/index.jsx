@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import Loading from '../../Components/Loading';
 import MenuBar from "../../Components/MenuBar";
+import moment from "moment";
 
 import { serverUrl } from "../../config";
 
@@ -36,7 +37,31 @@ class PatientQueue extends Component {
     }
 
     formatPatients = data => {
-        return Object.entries(data)
+        const dataArray = Object.entries(data)
+        const formattedArray = []
+        dataArray.forEach(patient => {
+            const id = patient[0]
+            const obj = patient[1]
+            obj["id"] = id
+            const visits = Object.entries(obj.visits)
+            const formattedVisits = [] 
+            visits.forEach(visit => {
+                const vid = visit[0]
+                const vobj = visit[1]
+                vobj["id"] = vid
+                formattedVisits.push(vobj)
+            })
+            const sortedVisits = formattedVisits.sort((a, b) => {
+                // - if a < b, 0 if a = b, + if a > b
+                const dateA = moment(a.checkInTime, "DD/MM/YYYY HH:MM:SS", true)
+                const dateB = moment(b.checkInTime, "DD/MM/YYYY HH:MM:SS", true)
+                return dateA - dateB
+            })
+            obj["visits"] = sortedVisits
+            formattedArray.push(obj)
+        })
+
+        return formattedArray
     }
 
     handleError = (err) => {
@@ -72,14 +97,17 @@ class PatientQueue extends Component {
                             </thead>
                             <tbody className="tableBody">
                                 {this.state.patients.map((p, i) => {
-                                    console.log(p)
+                                    console.log("visits", p.visits)
+                                    const numVisits = p.visits.length
+                                    const latestVisit = p.visits[numVisits - 1]
+                                    console.log(latestVisit, numVisits)
                                     return (
-                                        <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p[0])}>
+                                        <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p.id)}>
                                             <td className="tabletext">{i + 1}</td>
-                                            <td className="tabletext">{p[1].first_name + " " + p[1].last_name}</td>
-                                            <td className="tabletext">{p.urgency}</td>
-                                            <td className="tabletext">{p[1].visits[2]}</td>
-                                            <td className="tabletext">{p.reason}</td>
+                                            <td className="tabletext">{p.first_name + " " + p.last_name}</td>
+                                            <td className="tabletext">{latestVisit.urgency}</td>
+                                            <td className="tabletext">{(moment(latestVisit.checkInTime, "DD/MM/YYYY HH:MM:SS", true)).format("llll")}</td>
+                                            <td className="tabletext">{latestVisit.reason}</td>
                                         </tr>
                                     )
                                 })}

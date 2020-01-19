@@ -1,5 +1,5 @@
 .dashboardBG {
-    background: linear-gradient(45DEG,#2F1C53,#A46DFF,#F6D1FD) !important;
+    background-color: #A46DFF !important;
     color: var(--primary);
 }
 
