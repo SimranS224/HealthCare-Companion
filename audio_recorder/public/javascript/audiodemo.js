@@ -209,7 +209,7 @@ const persistFile = blob => {
 
 async function sendPostRequest() {
   let urlJSON = {filePath: fileUrl}
-  const response = await fetch('https://us-central1-healthcare-assitant-kxgfmk.cloudfunctions.net/convertVideo',
+  const response = await fetch('https://speech-transcript-server.herokuapp.com/',
   {
     method: 'POST',
     mode: 'cors',
