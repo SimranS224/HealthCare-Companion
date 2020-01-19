@@ -1,7 +1,7 @@
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{allPaths=**} {
-      allow read, update, delete;
+      allow read, write, update, delete;
       allow create;
     }
   }
