@@ -205,24 +205,22 @@ const persistFile = blob => {
 };
 
 async function sendPostRequest() {
-  let urlJSON = { filePath: fileUrl };
-  const response = await fetch(
-    "https://us-central1-healthcare-assitant-kxgfmk.cloudfunctions.net/convertVideo",
-    {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json"
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(urlJSON)
-    }
-  );
-  console.log(response);
-  const data = await response.json();
-  console.log(data);
-  return data;
+  let urlJSON = {filePath: fileUrl}
+  const response = await fetch('https://speech-transcript-server.herokuapp.com/',
+  {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(urlJSON)
+  })
+  console.log(response)
+  const data = await response.json()
+  console.log(data)
+  return data
 }
 
 // // Firebase Auth UI config
