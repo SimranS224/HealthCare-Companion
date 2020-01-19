@@ -1,17 +1,3 @@
-// Copyright 2019, Google, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 // Track audio recording state and objects
 let recording = false;
 let recordingStream = null;
@@ -38,10 +24,10 @@ const metadata = {
   contentType: "audio/ogg"
 };
 
-// Initialize the FirebaseUI Widget using Firebase.
-// https://github.com/firebase/firebaseui-web
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
-let user = null;
+let url = new URLSearchParams(window.location.search);
+console.log(url.get("id"));
+let user = url.get("id");
+console.log({ user });
 
 const MICROPHONE_IMAGE = "images/microphone.png";
 const MICROPHONE_RECORDING_IMAGE = "images/microphonerecording.png";
@@ -49,14 +35,6 @@ const MICROPHONE_RECORDING_IMAGE = "images/microphonerecording.png";
 // Handle the user clicks of the recording button
 const startButton = event => {
   console.log("startButton");
-  // if (user === null) {
-  //   alert('Please sign in to record a message.');
-  //   return;
-  // }
-  let url = new URLSearchParams(window.location.search);
-  console.log(urlParams.get("id"));
-  user = urlParams.get("id");
-  console.log({ user });
 
   if (recording) {
     stopRecording();
@@ -178,7 +156,7 @@ const stopRecording = () => {
 // https://firebase.google.com/docs/storage/web/upload-files
 const persistFile = blob => {
   const uploadTask = storageRef
-    .child("files/" + `${user}/` + new Date().toISOString() + ".ogg")
+    .child("new_files/" + `${user}/` + new Date().toISOString() + ".ogg")
     .put(blob, metadata);
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
@@ -208,7 +186,7 @@ const persistFile = blob => {
         // Persist the file URL in Firestore
         db.collection("files")
           .add({
-            user: user.uid,
+            user: user,
             url: downloadURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           })
@@ -223,78 +201,78 @@ const persistFile = blob => {
   );
 };
 
-// Firebase Auth UI config
-const getUiConfig = () => {
-  return {
-    signInSuccessUrl: "/",
-    signInOptions: [
-      {
-        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        // Required to enable this provider in One-Tap Sign-up.
-        authMethod: "https://accounts.google.com",
-        // Required to enable ID token credentials for this provider.
-        clientId: null
-      }
-    ],
-    // Terms of service url/callback.
-    tosUrl: "/tos.html",
-    // Privacy policy url/callback.
-    privacyPolicyUrl: "/privacy.html"
-  };
-};
+// // Firebase Auth UI config
+// const getUiConfig = () => {
+//   return {
+//     signInSuccessUrl: "/",
+//     signInOptions: [
+//       {
+//         provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+//         // Required to enable this provider in One-Tap Sign-up.
+//         authMethod: "https://accounts.google.com",
+//         // Required to enable ID token credentials for this provider.
+//         clientId: null
+//       }
+//     ],
+//     // Terms of service url/callback.
+//     tosUrl: "/tos.html",
+//     // Privacy policy url/callback.
+//     privacyPolicyUrl: "/privacy.html"
+//   };
+// };
 
-const deleteAccount = () => {
-  // Delete any data in the DB first
-  db.collection("files")
-    .where("user", "==", user.uid)
-    .get()
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        doc.ref.delete();
-      });
-      firebase
-        .auth()
-        .currentUser.delete()
-        .catch(error => {
-          console.log("delete error: " + JSON.stringify(error));
-          if (error.code === "auth/requires-recent-login") {
-            // The user's credential is too old. She needs to sign in again.
-            firebase
-              .auth()
-              .signOut()
-              .then(() => {
-                // The timeout allows the message to be displayed after the UI has
-                // changed to the signed out state.
-                setTimeout(() => {
-                  alert("Please sign in again to delete your account.");
-                }, 1);
-              });
-          }
-        });
-    });
-};
+// const deleteAccount = () => {
+//   // Delete any data in the DB first
+//   db.collection("files")
+//     .where("user", "==", user.uid)
+//     .get()
+//     .then(querySnapshot => {
+//       querySnapshot.forEach(doc => {
+//         doc.ref.delete();
+//       });
+//       firebase
+//         .auth()
+//         .currentUser.delete()
+//         .catch(error => {
+//           console.log("delete error: " + JSON.stringify(error));
+//           if (error.code === "auth/requires-recent-login") {
+//             // The user's credential is too old. She needs to sign in again.
+//             firebase
+//               .auth()
+//               .signOut()
+//               .then(() => {
+//                 // The timeout allows the message to be displayed after the UI has
+//                 // changed to the signed out state.
+//                 setTimeout(() => {
+//                   alert("Please sign in again to delete your account.");
+//                 }, 1);
+//               });
+//           }
+//         });
+//     });
+// };
 
-const handleSignedInUser = user => {
-  console.log("handleSignedInUser: " + JSON.stringify(user));
-  document.getElementById("sign-out").addEventListener("click", () => {
-    firebase.auth().signOut();
-  });
-  document.getElementById("delete-account").addEventListener("click", () => {
-    deleteAccount();
-  });
-  document.getElementById("user-signed-in").style.display = "block";
-  document.getElementById("user-signed-out").style.display = "none";
-};
+// const handleSignedInUser = user => {
+//   console.log("handleSignedInUser: " + JSON.stringify(user));
+//   document.getElementById("sign-out").addEventListener("click", () => {
+//     firebase.auth().signOut();
+//   });
+//   document.getElementById("delete-account").addEventListener("click", () => {
+//     deleteAccount();
+//   });
+//   document.getElementById("user-signed-in").style.display = "block";
+//   document.getElementById("user-signed-out").style.display = "none";
+// };
 
-/**
- * Displays the UI for a signed out user.
- */
-const handleSignedOutUser = () => {
-  console.log("handleSignedOutUser");
-  document.getElementById("user-signed-in").style.display = "none";
-  document.getElementById("user-signed-out").style.display = "block";
-  ui.start("#firebaseui-auth-container", getUiConfig());
-};
+// /**
+//  * Displays the UI for a signed out user.
+//  */
+// const handleSignedOutUser = () => {
+//   console.log("handleSignedOutUser");
+//   document.getElementById("user-signed-in").style.display = "none";
+//   document.getElementById("user-signed-out").style.display = "block";
+//   ui.start("#firebaseui-auth-container", getUiConfig());
+// };
 
 window.addEventListener("load", () => {
   // Listen to change in auth state so it displays the correct UI for when
@@ -302,10 +280,8 @@ window.addEventListener("load", () => {
   // firebase.auth().onAuthStateChanged(authUser => {
   //   user = authUser;
   //   document.getElementById("loading").style.display = "none";
-  //   document.getElementById("loaded").style.display = "block";
   //   authUser ? handleSignedInUser(authUser) : handleSignedOutUser();
-  });
-
+  // });s
   canvas = document.getElementById("visualizer");
   context = canvas.getContext("2d");
   context.fillStyle = "rgb(255, 255, 255)";
