@@ -55,6 +55,7 @@ class PatientQueue extends Component {
                 // - if a < b, 0 if a = b, + if a > b
                 const dateA = moment(a.checkInTime, "DD/MM/YYYY HH:MM:SS", true)
                 const dateB = moment(b.checkInTime, "DD/MM/YYYY HH:MM:SS", true)
+                console.log("date", dateA.format("llll"))
                 return dateA - dateB
             })
             obj["visits"] = sortedVisits
@@ -97,17 +98,17 @@ class PatientQueue extends Component {
                             </thead>
                             <tbody className="tableBody">
                                 {this.state.patients.map((p, i) => {
-                                    console.log("visits", p.visits)
                                     const numVisits = p.visits.length
                                     const latestVisit = p.visits[numVisits - 1]
-                                    console.log(latestVisit, numVisits)
+                                    const arrivalTime = (moment(latestVisit.checkInTime, "DD/MM/YYYY hh:mm:SS"))
+                                    console.log(arrivalTime)
                                     return (
                                         <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p.id)}>
                                             <td className="tabletext">{i + 1}</td>
                                             <td className="tabletext">{p.first_name + " " + p.last_name}</td>
-                                            <td className="tabletext">{latestVisit.urgency}</td>
-                                            <td className="tabletext">{(moment(latestVisit.checkInTime, "DD/MM/YYYY HH:MM:SS", true)).format("llll")}</td>
-                                            <td className="tabletext">{latestVisit.reason}</td>
+                                            <td className="tabletext">{latestVisit.urgency || Math.floor(Math.random() * 7)}</td>
+                                            <td className="tabletext">{arrivalTime.format("llll")}</td>
+                                            <td className="tabletext">{latestVisit.reason || "General Checkup"}</td>
                                         </tr>
                                     )
                                 })}
