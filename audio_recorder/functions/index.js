@@ -19,6 +19,19 @@
 const { dialogflow } = require("actions-on-google");
 // Import the firebase-functions package for Cloud Functions for Firebase fulfillment.
 const functions = require("firebase-functions");
+const speech = require('@google-cloud/speech');
+const fs = require('fs');
+const cors = require('cors')({origin: true});
+
+const admin = require("firebase-admin");
+
+var serviceAccount = require("./healthcare-assitant-kxgfmk-firebase-adminsdk-3q8lq-047d0d801a");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://healthcare-assitant-kxgfmk.firebaseio.com"
+});
+const db = admin.firestore();
+
 
 // Instantiate the Dialogflow client with debug logging enabled.
 const app = dialogflow({
@@ -31,9 +44,7 @@ const OUTRO_SOUND =
   "https://storage.googleapis.com/actionsresources/Set2_Outro1.wav";
 
 // Initialize Cloud Firestore through Firebase
-const admin = require("firebase-admin");
-admin.initializeApp();
-const db = admin.firestore();
+
 
 // Default intent for handling the start of the action
 app.intent("Default Welcome Intent", conv => {
@@ -82,3 +93,47 @@ app.intent("Default Welcome Intent", conv => {
 // Cloud Functions for Firebase handler for HTTPS POST requests.
 // https://developers.google.com/actions/dialogflow/fulfillment#building_fulfillment_responses
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
+
+exports.convertVideo = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS='./healthcare-assitant-kxgfmk-firebase-adminsdk-3q8lq-047d0d801a.json'
+    async function main() {
+        // Imports the Google Cloud client library
+        res.set({ 'Access-Control-Allow-Origin': '*' }).sendStatus(200)
+  
+        // Creates a client
+        const client = new speech.SpeechClient();
+      
+     
+        // The audio file's encoding, sample rate in hertz, and BCP-47 language code
+        const audio = {
+          uri: `gs://healthcare-assitant-kxgfmk.appspot.com/${req.params.filePath}`,
+    
+        };
+        const config = {
+          sampleRateHertz: 48000,
+          languageCode: 'en-US',
+          audioChannelCount: 2,
+    
+        };
+        const request = {
+          audio: audio,
+          config: config,
+          
+        };
+      
+        // Detects speech in the audio file
+        const [response] = await client.recognize(request);
+        const transcription = response.results
+    
+          .map(result => result.alternatives[0].transcript)
+          .join('\n');
+        console.log(`Transcription: ${transcription}`);
+        res.send({data:transcription})
+      }
+      main().catch(console.error)
+
+  });
+
+});
+

@@ -13,6 +13,8 @@ let bufferSize;
 let analyser;
 let canvas;
 let context;
+let fileUrl = "";
+
 
 // Initialize Cloud Firestore through Firebase
 const db = firebase.firestore();
@@ -21,7 +23,7 @@ const db = firebase.firestore();
 const storageService = firebase.storage();
 const storageRef = storageService.ref();
 const metadata = {
-  contentType: "audio/ogg"
+  contentType: "audio/wav"
 };
 
 let url = new URLSearchParams(window.location.search);
@@ -91,7 +93,7 @@ const startRecording = () => {
       // https://github.com/higuma/web-audio-recorder-js
       webAudioRecorder = new WebAudioRecorder(audioSource, {
         workerDir: "javascript/",
-        encoding: "ogg",
+        encoding: "wav",
         onEncoderLoading: (recorder, encoding) => {
           console.log("onEncoderLoading");
         },
@@ -110,7 +112,7 @@ const startRecording = () => {
       webAudioRecorder.setOptions({
         timeLimit: 180, // max number of seconds for recording
         encodeAfterRecord: true, // encode the audio data after recording
-        ogg: {
+        wav: {
           bitRate: 160 // 160 Hz bitrate
         }
       });
@@ -155,8 +157,9 @@ const stopRecording = () => {
 // Upload the geneerated OGG file to cloud storage.
 // https://firebase.google.com/docs/storage/web/upload-files
 const persistFile = blob => {
+  fileUrl = "new_files/" + new Date().toISOString() + ".wav"
   const uploadTask = storageRef
-    .child("new_files/" + `${user}/` + new Date().toISOString() + ".ogg")
+    .child(fileUrl)
     .put(blob, metadata);
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
@@ -192,6 +195,9 @@ const persistFile = blob => {
           })
           .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
+            sendPostRequest().then((data)=> {
+              console.log(data)
+            })
           })
           .catch(error => {
             console.error("Error adding document: ", JSON.stringify(error));
@@ -200,6 +206,23 @@ const persistFile = blob => {
     }
   );
 };
+
+async function sendPostRequest() {
+  let urlJSON = {filePath: fileUrl}
+  const response = await fetch('https://us-central1-healthcare-assitant-kxgfmk.cloudfunctions.net/convertVideo',
+  {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(urlJSON)
+  })
+  const data = await response.json()
+  return data
+}
 
 // // Firebase Auth UI config
 // const getUiConfig = () => {
