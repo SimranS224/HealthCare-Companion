@@ -15,7 +15,6 @@ let canvas;
 let context;
 let fileUrl = "";
 
-
 // Initialize Cloud Firestore through Firebase
 const db = firebase.firestore();
 
@@ -56,7 +55,7 @@ const animationStep = timestamp => {
   analyser.getByteTimeDomainData(audioData);
 
   context.fillRect(0, 0, WIDTH, HEIGHT);
-
+  context.fillStyle = "#a46dff";
   context.beginPath();
   let xIncrement = (WIDTH * 1.0) / bufferSize;
   let x = 0;
@@ -157,10 +156,8 @@ const stopRecording = () => {
 // Upload the geneerated OGG file to cloud storage.
 // https://firebase.google.com/docs/storage/web/upload-files
 const persistFile = blob => {
-  fileUrl = "new_files/" + new Date().toISOString() + ".wav"
-  const uploadTask = storageRef
-    .child(fileUrl)
-    .put(blob, metadata);
+  fileUrl = "new_files/" + new Date().toISOString() + ".wav";
+  const uploadTask = storageRef.child(fileUrl).put(blob, metadata);
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
     snapshot => {
@@ -195,9 +192,9 @@ const persistFile = blob => {
           })
           .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
-            sendPostRequest().then((data)=> {
-              console.log(data)
-            })
+            sendPostRequest().then(data => {
+              console.log(data);
+            });
           })
           .catch(error => {
             console.error("Error adding document: ", JSON.stringify(error));
@@ -208,22 +205,24 @@ const persistFile = blob => {
 };
 
 async function sendPostRequest() {
-  let urlJSON = {filePath: fileUrl}
-  const response = await fetch('https://us-central1-healthcare-assitant-kxgfmk.cloudfunctions.net/convertVideo',
-  {
-    method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: JSON.stringify(urlJSON)
-  })
-  console.log(response)
-  const data = await response.json()
-  console.log(data)
-  return data
+  let urlJSON = { filePath: fileUrl };
+  const response = await fetch(
+    "https://us-central1-healthcare-assitant-kxgfmk.cloudfunctions.net/convertVideo",
+    {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json"
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(urlJSON)
+    }
+  );
+  console.log(response);
+  const data = await response.json();
+  console.log(data);
+  return data;
 }
 
 // // Firebase Auth UI config
