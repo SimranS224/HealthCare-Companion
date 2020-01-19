@@ -14,61 +14,50 @@ class PatientQueue extends Component {
         this.state = {
             isSignedIn: props.isSignedIn,
             isLoading: true,
-            patients: [
-                {   
-                    id: 5,
-                    name: "Test Name",
-                    reason: "Im ill",
-                    urgency: "None",
-                    time: "5:00PM"
-                },
-                {
-                    id: 6,
-                    name: "Test Name2",
-                    reason: "Im ill",
-                    urgency: "None",
-                    time: "5:00PM"
-                }
-            ]
         }
     }
 
     componentDidMount = async () => {
-        const endpoint = serverUrl + "/api/report/"
+        const endpoint = serverUrl + "/waiting-patients"
         console.log(endpoint)
         try {
             const response = await fetch(endpoint);
             const data = await response.json();
             console.log(data)
-            this.setState({ patients: data.data })
+            const formattedData = this.formatPatients(data);
+            console.log(formattedData);
+            this.setState({ patients: formattedData, isLoading: false })
         } catch (err) {
             this.handleError(err)
         }
-        setTimeout(() => {
-            this.setState({ isLoading: false })
-        }, 1000)
+        // setTimeout(() => {
+        //     this.setState({ isLoading: false })
+        // }, 500)
+    }
+
+    formatPatients = data => {
+        return Object.entries(data)
     }
 
     handleError = (err) => {
         console.log("Error", err)
     }
 
-    handleClick = (patient) => {
+    handleClick = (id) => {
         // Redirect to patient view
-        console.log("Clicked on " + patient.name);
-        this.setState({ redirectTo: patient.id });
+        this.setState({ redirectTo: id });
     }
 
     render = () => {
         if (this.state.redirectTo) {
-            return <Redirect to={`/patient/${this.state.redirectTo}`}/>;
+            return <Redirect to={`/patient/${this.state.redirectTo}`} />;
         }
         if (this.state.isLoading) {
             return <Loading />
         } else {
             return (
                 <div className="fullscreen dashboardBG">
-                    {this.state.isLoading ? <Loading /> : null}
+                    {/* {this.state.isLoading ? <Loading /> : null} */}
                     <MenuBar setIsSignedIn={this.props.setIsSignedIn} title={"Patients Waiting to be Seen"} />
                     <div className="reportsWrapper">
                         <Table responsive id="table">
@@ -77,18 +66,19 @@ class PatientQueue extends Component {
                                     <th className="tableheader">#</th>
                                     <th className="tableheader">Patient</th>
                                     <th className="tableheader">Urgency</th>
-                                    <th className="tableheader">Waiting Since</th>
+                                    <th className="tableheader">Arrival Time</th>
                                     <th className="tableheader">Reason for Visit</th>
                                 </tr>
                             </thead>
                             <tbody className="tableBody">
                                 {this.state.patients.map((p, i) => {
+                                    console.log(p)
                                     return (
-                                        <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p)}>
+                                        <tr key={i} className="linkToViolation" onClick={() => this.handleClick(p[0])}>
                                             <td className="tabletext">{i + 1}</td>
-                                            <td className="tabletext">{p.name}</td>
+                                            <td className="tabletext">{p[1].first_name + " " + p[1].last_name}</td>
                                             <td className="tabletext">{p.urgency}</td>
-                                            <td className="tabletext">{p.time}</td>
+                                            <td className="tabletext">{p[1].visits[2]}</td>
                                             <td className="tabletext">{p.reason}</td>
                                         </tr>
                                     )
@@ -100,18 +90,6 @@ class PatientQueue extends Component {
                 </div>
             );
         }
-        // else {
-        //     return (
-        //         <div className="fullscreen dashboardBG">
-        //             {this.state.isLoading ? <Loading /> : null}
-        //             <MenuBar showSearch={true} searchFor={this.searchFor} setIsSignedIn={this.props.setIsSignedIn} title={"Search By License Plate"} />
-        //             <div className="noSearches">
-        //                 <img src={Logo} alt="CrowdDash" className="logo" />
-        //                 <h1 className="noSearchText">{"No Logs found for that license plate"}</h1>
-        //             </div>
-        //         </div>
-        //     )
-        // }
     }
 }
 

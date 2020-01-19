@@ -3,7 +3,7 @@
 }
 
 .loginBackground {
-    background-color: var(--secondary);
+    background: linear-gradient(45DEG,#2F1C53,#A46DFF,#F6D1FD);
     color: var(--quaternary);
     display: flex;
     flex-direction: column;
@@ -33,10 +33,13 @@
 .loginLogo {
     position: absolute;
     height: 25vh;
+    width: 25vh;
     top: 10vh;
     animation-name: topToBottom;
     animation-duration: 1.4s;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2), -5px -5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    object-fit: contain;
+    /* box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2), -5px -5px 15px rgba(0, 0, 0, 0.2); */
 }
 
 .loginHeader {

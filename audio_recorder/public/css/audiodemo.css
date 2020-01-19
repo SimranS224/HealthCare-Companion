@@ -30,6 +30,7 @@
   width: 400px;
   height: 400px;
   outline: none;
+  background: rgba(0, 0, 0, 0);
 }
 
 .centered-text {
@@ -58,6 +59,7 @@
   vertical-align: text-top;
   text-align: center;
   z-index: -1;
+  background: rgba(0, 0, 0, 0);
 }
 
 .centered-auth {
@@ -75,7 +77,7 @@
 
 #start_button {
   border: 0;
-  background-color:transparent;
+  background: rgba(0, 0, 0, 0);
   padding: 0;
 }
 

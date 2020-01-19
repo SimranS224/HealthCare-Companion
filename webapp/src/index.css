@@ -25,10 +25,10 @@ html {
 
 body {
     margin: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', 'Gotham Ultralight';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--primary);
+    background: linear-gradient(45DEG,#2F1C53,#A46DFF,#F6D1FD);;
     color: var(--secondary);
 }
 

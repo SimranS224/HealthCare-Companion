@@ -68,10 +68,11 @@ class PatientQueue extends Component {
             return (
                 <div className="fullscreen dashboardBG">
                     {this.state.isLoading ? <Loading /> : null}
-                    <MenuBar setIsSignedIn={this.props.setIsSignedIn} title={"Patients Waiting to be Seen"} />
+                    <MenuBar setIsSignedIn={this.props.setIsSignedIn} title={"Record Your Session"} />
                     <Iframe url={url}
+                        allow="microphone"
                         width="100%"
-                        height="80%"
+                        height="100%"
                         id="myId"
                         className="myClassname"
                         display="initial"
