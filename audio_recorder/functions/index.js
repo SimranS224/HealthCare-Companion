@@ -95,7 +95,7 @@ app.intent("Default Welcome Intent", conv => {
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
 
 exports.convertVideo = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
+  // cors(req, res, () => {
     process.env.GOOGLE_APPLICATION_CREDENTIALS='./healthcare-assitant-kxgfmk-firebase-adminsdk-3q8lq-047d0d801a.json'
     async function main() {
         // Imports the Google Cloud client library
@@ -107,7 +107,7 @@ exports.convertVideo = functions.https.onRequest((req, res) => {
      
         // The audio file's encoding, sample rate in hertz, and BCP-47 language code
         const audio = {
-          uri: `gs://healthcare-assitant-kxgfmk.appspot.com/${req.params.filePath}`,
+          uri: `gs://healthcare-assitant-kxgfmk.appspot.com/new_files/2020-01-19T03:33:59.580Z.wav`,
     
         };
         const config = {
@@ -123,17 +123,20 @@ exports.convertVideo = functions.https.onRequest((req, res) => {
         };
       
         // Detects speech in the audio file
-        const [response] = await client.recognize(request);
-        const transcription = response.results
+        const [response] = await client.recognize(request).then((data)=> {
+          const transcription = response.results
     
           .map(result => result.alternatives[0].transcript)
           .join('\n');
         console.log(`Transcription: ${transcription}`);
-        res.send({data:transcription})
+        let jsonData = {data:transcription}
+        res.writeHead(200,{'Access-Control-Allow-Origin': '*'})
+        res.json(jsonData)
+        });
       }
       main().catch(console.error)
 
   });
 
-});
+// });
 
