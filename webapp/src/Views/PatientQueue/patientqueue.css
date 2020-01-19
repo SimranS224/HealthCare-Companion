@@ -1,11 +1,12 @@
 .dashboardBG {
-    background-color: var(--secondary);
+    background-color: #A46DFF !important;
     color: var(--primary);
 }
 
 .noSearches {
     width: 100%;
     height: 100%;
+    /* background: linear-gradient(45DEG,#2F1C53,#A46DFF,#F6D1FD); */
     background-color: var(--primary);
     color: (0, 0, 0, 0.2);
     display: flex;

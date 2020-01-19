@@ -1,6 +1,5 @@
 .loadingBG {
-    background-color: var(--primary);
-    color: var(--secondary);
+    background: linear-gradient(45DEG,#2F1C53,#A46DFF,#F6D1FD);
     display: flex;
     flex-direction: column;
     align-items: center;

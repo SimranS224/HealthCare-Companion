@@ -1,5 +1,5 @@
 .dashboardBG {
-    background-color: var(--secondary);
+    background: var(--secondary);
     color: var(--primary);
 }
 
