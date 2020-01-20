@@ -13,7 +13,7 @@
 ## How we built it
 - A firebase database keeps track of all the clinics, all the patients in the clinics, their medical information, as well as their checkin 
 <p align="center">
-  <img width="460" height="300" src="tech-stack.png">
+  <img width="460" height="400" src="tech-stack.png">
 </p>
 
 ## History
