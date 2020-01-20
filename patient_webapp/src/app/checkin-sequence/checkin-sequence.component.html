@@ -1,0 +1,39 @@
+<div class = "page">
+
+
+<div class = "prompt" *ngIf = "this.prompt == 1">
+        <h3 style = "color:white;">Hi Martin, what brings you into the clinic today?</h3>
+<div class="form-group">
+    <input #intro (keyup.enter)="updateIntro(intro.value)" (blur) = "updateIntro(intro.value)"type="text"  class="form-control input-underline input-lg" id="" >
+    <button (click) = "updatePrompt()" class = "btn-dark"><i class="fas fa-arrow-right"></i></button>
+</div>
+</div>
+
+
+<div class = "prompt" *ngIf = "this.prompt == 2">
+<h3 style = "color:white;">How urgently do you need care on a scale of 1-10?</h3>
+<div class="form-group">
+  <input #urgency (keyup.enter)="updateUrgency(urgency.value)" (blur) = "updateUrgency(urgency.value)" type="text"  class="form-control input-underline input-lg" id="" >
+</div>
+<button (click) = "updatePrompt()" class = "btn-dark"><i class="fas fa-arrow-right"></i></button>
+</div>
+
+
+<div class = "prompt"  *ngIf = "this.prompt == 3">
+<h3 style = "color:white;">How have you been treating it so far?</h3>
+<div class="form-group">
+  <input #treatment (keyup.enter)="updateTreatment(treatment.value)" (blur) = "updateTreatment(treatment.value)" type="text"  class="form-control input-underline input-lg" id="" placeholder="{{ 'Ex: Icing knee' | translate }}">
+</div>
+<button (click) = "updatePrompt()" class = "btn-dark"><i class="fas fa-arrow-right"></i></button>
+</div> 
+
+
+<div class = "prompt"  *ngIf = "this.prompt == 4">
+<h3 style = "color:white;">Are you currently on any medication?</h3>
+<div class="form-group">
+  <input #medication (keyup.enter)="updateMedication(medication.value)" (blur) = "updateMedication(medication.value)" type="text" class="form-control input-underline input-lg" id="" placeholder="{{ 'Ex; taking advil' | translate }}">
+</div>
+<button class = "btn-dark" (click)="submitResponses()">Submit responses</button>
+</div>
+ 
+</div>

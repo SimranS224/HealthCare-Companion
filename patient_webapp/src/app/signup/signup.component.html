@@ -1,0 +1,88 @@
+<!-- <div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <img class="user-avatar" src="assets/images/logo.png" width="100px" />
+            <h1>MedExpress</h1>
+            <form role="form">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input #firstname (keyup.enter)="updateFirstName(firstname.value)" (blur) = "updateFirstName(firstname.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.firstName" name="firstName" placeholder="{{ 'First Name' | translate }}">
+                    </div>
+                    <div class="form-group">
+                        <input #lastname (keyup.enter)="updateLastName(lastname.value)" (blur) = "updateLastName(lastname.value)" type="text" class="form-control input-underline input-lg" [(ngModel)]="user.lastName" name="lastName" placeholder="{{ 'Last Name' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #phoneNumber (keyup.enter)="updatePhoneNumber(phoneNumber.value)" (blur) = "updatePhoneNumber(phoneNumber.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.lastName" name="lastName" placeholder="{{ 'Emergency Contact Number' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #contactName (keyup.enter)="updateContactName(contactName.value)" (blur) = "updateContactName(contactName.value)" type="text" class="form-control input-underline input-lg" [(ngModel)]="user.lastName" name="lastName" placeholder="{{ 'Emergency Contact' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #contactNumber (keyup.enter)="updateContactNumber(contactNumber.value)" (blur) = "updateContactNumber(contactNumber.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.lastName" name="lastName" placeholder="{{ 'Emergency Contact Number' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #email (keyup.enter)="updateEmail(email.value)" (blur) = "updateEmail(email.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.email" name="email" placeholder="{{ 'Email' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #password (keyup.enter)="updatePassword(password.value)" (blur) = "updatePassword(password.value)" type="password" class="form-control input-underline input-lg" [(ngModel)]="password" name="password" placeholder="{{ 'Password' | translate }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-underline input-lg" placeholder="{{ 'Repeat Password' | translate }}">
+                    </div>
+                </div>
+                <a (click) = "registerUser()" class="btn rounded-btn">{{ 'Register' | translate }}</a>&nbsp;
+                <a class="btn rounded-btn" [routerLink]="['/login']">{{ 'Log in' | translate }}</a>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+<div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <img class="user-avatar" src="assets/images/logo.png" width="100px" />
+            <h1>MedExpress</h1>
+            <form role="form">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input #firstname (keyup.enter)="updateFirstName(firstname.value)" (blur) = "updateFirstName(firstname.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.firstName" name="firstName" placeholder="{{ 'First Name' | translate }}">
+                    </div>
+                    <div class="form-group">
+                        <input #lastname (keyup.enter)="updateLastName(lastname.value)" (blur) = "updateLastName(lastname.value)" type="text" class="form-control input-underline input-lg" [(ngModel)]="user.lastName" name="lastName" placeholder="{{ 'Last Name' | translate }}">
+                    </div>
+
+
+                    <div class="form-group">
+                        <input #number (keyup.enter)="updatePhoneNumber(number.value)" (blur) = "updatePhoneNumber(number.value)" type="text" class="form-control input-underline input-lg" name="number" placeholder="{{ 'Number' | translate }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input #contactName (keyup.enter)="updateContactName(contactName.value)" (blur) = "updateContactName(contactName.value)"type="text" class="form-control input-underline input-lg" name="emergencyContactName" placeholder="{{ 'Emergency Contact Name' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #contactNumber (keyup.enter)="updateContactNumber(contactNumber.value)" (blur) = "updateContactNumber(contactNumber.value)" type="text" class="form-control input-underline input-lg"  name="emergencyContactNumber" placeholder="{{ 'Emergency Contact Number' | translate }}">
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <input #email (keyup.enter)="updateEmail(email.value)" (blur) = "updateEmail(email.value)"type="text" class="form-control input-underline input-lg" [(ngModel)]="user.email" name="email" placeholder="{{ 'Email' | translate }}">
+                    </div>
+
+                    <div class="form-group">
+                        <input #psw (keyup.enter)="updatePassword(psw.value)" (blur) = "updatePassword(psw.value)" type="password" class="form-control input-underline input-lg" [(ngModel)]="password" name="password" placeholder="{{ 'Password' | translate }}">
+                    </div>
+
+                </div>
+                <a (click) = "registerUser()" class="btn rounded-btn">{{ 'Register' | translate }}</a>&nbsp;
+                <a class="btn rounded-btn" [routerLink]="['/login']">{{ 'Log in' | translate }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+
