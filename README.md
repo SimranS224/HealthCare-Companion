@@ -10,9 +10,11 @@
 - When a patient enters a clinic, they can check into the clinic via a QR code. The web app then asks the users questions just like any receptionist would such as reason for visiting the clinic, symptoms,medication etc. 
 - The web app then tells the patient their current position in a queue and determines an estimated wait time.
 
-
 ## How we built it
 - A firebase database keeps track of all the clinics, all the patients in the clinics, their medical information, as well as their checkin 
+<p align="center">
+  <img width="460" height="300" src="techstack.png">
+</p>
 
 ## History
 - Flask is used for the server side for all the CRUD operations as well as the queue generation
