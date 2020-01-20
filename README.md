@@ -1,5 +1,8 @@
 # MedExpress
 
+<p align="center">
+  <img width="auto" height="400" src="MedExpressLogo.png">
+</p>
 ## Inspiration
 - Visits to the clinic are incredibly inefficient, each time you have to wait in line to talk to a receptionist, and tell them the same info each time, you then have to take a seat and wait till your name is called. After the visit, you are expected to remember all the information the doctor provided.
 - This is a system that has existed for too long, and we believe this can be improved
