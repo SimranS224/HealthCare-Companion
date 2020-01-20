@@ -17,7 +17,7 @@
 - React is used for the front-end of the doctor side app
 
 <p align="center">
-  <img width="460" height="400" src="tech-stack.png">
+  <img width="auto" height="400" src="tech-stack.png">
 </p>
 ## Challenges we ran into
 - Adding patients to a queue based on check in times
