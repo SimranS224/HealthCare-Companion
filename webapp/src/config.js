@@ -1,2 +1,2 @@
-const serverUrl = "https://medexpress-265520.appspot.com"
+const serverUrl = "https://medexpresss.pythonanywhere.com"
 export { serverUrl }
