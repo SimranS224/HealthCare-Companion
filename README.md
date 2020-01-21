@@ -39,8 +39,8 @@
 - We're plan to reach out to health clinics to incorporate our software into their work flow
 - IPO in 6 months big bets
 
-API Url: https://medexpress-265520.appspot.com/
-Web Recoreder Url: https://medexpress.netlify.com
-Speech to Text Server: https://speech-transcript-server.herokuapp.com/
-Patient Web App: https://medexpress-client.herokuapp.com/login
-Doctor Web App: 
+<p>API Url: https://medexpress-265520.appspot.com/<p>
+<p>Web Recoreder Url: https://medexpress.netlify.com<p>
+<p>Speech to Text Server: https://speech-transcript-server.herokuapp.com/<p>
+<p>Patient Web App: https://medexpress-client.herokuapp.com/login</p>
+<p>Doctor Web App: https://medexpress.netlify.com </p>
